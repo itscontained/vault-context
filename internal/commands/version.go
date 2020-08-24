@@ -14,10 +14,11 @@ var (
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
-	Use:   "get",
+	Use:   "version",
 	Short: "get the version and build date",
+	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Version: %s, Build Date: %s, Commit: %s", version, buildDate, commit)
+		fmt.Printf("Version: %s, Build Date: %s, Commit: %s\n", version, buildDate, commit)
 	},
 }
 
