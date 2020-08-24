@@ -26,7 +26,7 @@ type VaultEnv struct {
 	URL       string        `mapstructure:"url"`
 	Namespace string        `mapstructure:"namespace"`
 	Alias     string        `mapstructure:"alias"`
-	Token     storage.Token `mapstructure:"-"`
+	Token     storage.Token `yaml:"-"`
 }
 
 var Config = Cfg{
