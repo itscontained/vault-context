@@ -1,6 +1,6 @@
 module github.com/itscontained/vault-context
 
-go 1.14
+go 1.15
 
 require (
 	github.com/99designs/keyring v1.1.5
