@@ -15,6 +15,9 @@ var deleteCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		config.Config.Delete(args[0])
 	},
+	PostRun: func(cmd *cobra.Command, args []string) {
+		config.Write()
+	},
 }
 
 func init() {

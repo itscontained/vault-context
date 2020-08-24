@@ -65,11 +65,9 @@ func (c *Cfg) Add(url, namespace, alias string) error {
 		Alias:     alias,
 	}
 	if !c.Exists(url) {
-
 		c.VaultEnvs = append(c.VaultEnvs, v)
 	} else {
 		return errors.New("context already exists")
 	}
-	Write()
 	return nil
 }

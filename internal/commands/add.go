@@ -44,6 +44,9 @@ var addCmd = &cobra.Command{
 			log.Info("context added")
 		}
 	},
+	PostRun: func(cmd *cobra.Command, args []string) {
+		config.Write()
+	},
 }
 
 func init() {

@@ -10,7 +10,6 @@ func (c *Cfg) Delete(ctx string) {
 				log.Error(err)
 			}
 			log.Info("deleted context")
-			Write()
 			return
 		}
 	}

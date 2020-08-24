@@ -45,5 +45,4 @@ func (c *Cfg) TokenHelper(cmd string) {
 			}
 		}
 	}
-	Write()
 }

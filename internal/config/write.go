@@ -10,5 +10,7 @@ func Write() {
 	viper.Set("contexts", Config.VaultEnvs)
 	if err := viper.WriteConfig(); err != nil {
 		log.Error("could not write config file")
+	} else {
+		log.Debug("wrote to config file")
 	}
 }
