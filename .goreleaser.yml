@@ -10,7 +10,13 @@ builds:
       - darwin
     goarch:
       - amd64
-    main: ./cmd/vault-context
+    main: ./cmd/vault-context/main.go
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/itscontained/vault-context/internal/commands.version={{.Version}}
+      - -X github.com/itscontained/vault-context/internal/commands.commit={{.Commit}}
+      - -X github.com/itscontained/vault-context/internal/commands.date={{.Date}}
 archives:
   - replacements:
       darwin: Darwin
