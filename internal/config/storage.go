@@ -113,7 +113,6 @@ func (c *Cfg) Init(debug bool) {
 		KeychainTrustApplication: true,
 		KeychainSynchronizable:   Config.Keychain.Keychain.Synchronizable,
 	}
-
 	switch Config.Keychain.BackendType {
 	case "automatic", "":
 		storageCfg.AllowedBackends = storage.Backends
@@ -121,6 +120,14 @@ func (c *Cfg) Init(debug bool) {
 		storageCfg.AllowedBackends = []keyring.BackendType{keyring.KeychainBackend}
 	case "kdewallet":
 		storageCfg.AllowedBackends = []keyring.BackendType{keyring.KWalletBackend}
+	case "secret-service":
+		storageCfg.AllowedBackends = []keyring.BackendType{keyring.SecretServiceBackend}
+	case "wincred":
+		storageCfg.AllowedBackends = []keyring.BackendType{keyring.WinCredBackend}
+	case "keepass":
+		storageCfg.AllowedBackends = []keyring.BackendType{keyring.PassBackend}
+	case "file":
+		storageCfg.AllowedBackends = []keyring.BackendType{keyring.FileBackend}
 	default:
 		log.Errorf("Unknown backend '%s'", Config.Keychain.BackendType)
 	}
