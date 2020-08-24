@@ -23,6 +23,8 @@ archives:
       linux: Linux
       windows: Windows
       amd64: x86_64
+    files:
+      - none*
 checksum:
   name_template: 'checksums.txt'
 snapshot:
