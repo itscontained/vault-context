@@ -80,8 +80,11 @@ func (c *Cfg) FileCheck(enable bool) {
 	}
 }
 
-func (c *Cfg) Init() {
+func (c *Cfg) Init(debug bool) {
 	var err error
+	if debug {
+		log.SetLevel(log.DebugLevel)
+	}
 	f := &Files{
 		Self:  "vault-context",
 		Vault: ".vault",

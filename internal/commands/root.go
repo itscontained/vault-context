@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var debug = false
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "vault-context",
@@ -30,12 +32,13 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.PersistentFlags().BoolVarP(&debug, "debug", "v", false, "show debug logging")
 	cobra.OnInitialize(initConfig)
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	config.Config.Init()
+	config.Config.Init(debug)
 	viper.AddConfigPath(config.Config.Files.SelfDir)
 	viper.SetConfigName(config.Config.Files.Self)
 	viper.SetConfigType("yaml")
