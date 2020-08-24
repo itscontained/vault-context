@@ -11,8 +11,6 @@ builds:
     goarch:
       - amd64
     main: ./cmd/vault-context
-    ldflags:
-      - -s -w -X commands.version={{.Version}} -X commands.commit={{.Commit}} -X commands.buildDate={{.Date}}
 archives:
   - replacements:
       darwin: Darwin
