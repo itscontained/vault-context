@@ -82,9 +82,16 @@ func (c *Cfg) FileCheck(enable bool) {
 
 func (c *Cfg) Init(debug bool) {
 	var err error
+	logFormatter := &log.TextFormatter{
+		DisableTimestamp:       true,
+		FullTimestamp:          true,
+		DisableLevelTruncation: true,
+	}
 	if debug {
 		log.SetLevel(log.DebugLevel)
+		logFormatter.DisableTimestamp = false
 	}
+	log.SetFormatter(logFormatter)
 	f := &Files{
 		Self:  "vault-context",
 		Vault: ".vault",
