@@ -27,10 +27,10 @@ Use "vault-context [command] --help" for more information about a command.
 ## Examples:
 ```
 vault-context list
- ALIAS     URL                            NAMESPACE                  TOKEN                      
- home      https://vault.domain.tld                                  s.7asdfrYasdf 
- cloud     https://vault.aws.domain.tld                              -                          
- test      https://test.vault.domain.tld  eadp-techops-cloud-devops  -     
+ ALIAS     URL                            NAMESPACE    TOKEN                      
+ home      https://vault.domain.tld                    s.7asdfrYasdf 
+ cloud     https://vault.aws.domain.tld                -                          
+ test      https://test.vault.domain.tld  test-dev     -     
 ```
 
 ## Quickstart
