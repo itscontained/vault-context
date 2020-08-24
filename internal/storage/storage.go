@@ -15,8 +15,16 @@ type Storage struct {
 }
 
 var Backends = []keyring.BackendType{
-	// KDE Wallet
+	// Linux
 	keyring.KWalletBackend,
+	keyring.SecretServiceBackend,
+	// MacOS
+	keyring.KeychainBackend,
+	// Windows
+	keyring.WinCredBackend,
+	// General
+	keyring.PassBackend,
+	keyring.FileBackend,
 }
 
 func New(cfg keyring.Config) (*Storage, error) {

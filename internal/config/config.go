@@ -14,21 +14,6 @@ type Cfg struct {
 	VaultEnvs []VaultEnv `mapstructure:"contexts"`
 }
 
-type Keychain struct {
-	BackendType string                 `mapstructure:"backend"`
-	Keychain    keychainBackendConfig  `mapstructure:"keychain"`
-	KDEWallet   kdeWalletBackendConfig `mapstructure:"kdewallet"`
-}
-
-type keychainBackendConfig struct {
-	Keychain       string `mapstructure:"keychain_name"`
-	Synchronizable bool   `mapstructure:"icloud"`
-}
-
-type kdeWalletBackendConfig struct {
-	Keychain string `mapstructure:"keychain_name"`
-}
-
 type Files struct {
 	Self      string
 	SelfDir   string
@@ -50,6 +35,16 @@ var Config = Cfg{
 		BackendType: "",
 		Keychain:    keychainBackendConfig{},
 		KDEWallet:   kdeWalletBackendConfig{},
+		SecretService: secretServiceBackendConfig{
+			Collection: "vault-context",
+		},
+		Pass: passBackendConfig{
+			Prefix: "vault-context",
+		},
+		WinCred: winCredBackendConfig{
+			Prefix: "vault-context",
+		},
+		File: fileBackendConfig{},
 	},
 	VaultEnvs: make([]VaultEnv, 0),
 }

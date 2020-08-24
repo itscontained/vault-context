@@ -12,6 +12,43 @@ import (
 	"github.com/itscontained/vault-context/internal/storage"
 )
 
+type Keychain struct {
+	BackendType   string                     `mapstructure:"backend"`
+	Keychain      keychainBackendConfig      `mapstructure:"keychain"`
+	KDEWallet     kdeWalletBackendConfig     `mapstructure:"kdewallet"`
+	SecretService secretServiceBackendConfig `mapstructure:"secret-service"`
+	Pass          passBackendConfig          `mapstructure:"pass"`
+	WinCred       winCredBackendConfig       `mapstructure:"wincred"`
+	File          fileBackendConfig          `mapstructure:"file"`
+}
+
+type keychainBackendConfig struct {
+	Keychain       string `mapstructure:"keychain_name"`
+	Synchronizable bool   `mapstructure:"icloud"`
+}
+
+type kdeWalletBackendConfig struct {
+	Keychain string `mapstructure:"keychain_name"`
+}
+
+type secretServiceBackendConfig struct {
+	Collection string `mapstructure:"collection"`
+}
+
+type passBackendConfig struct {
+	Dir     string `mapstructure:"dir"`
+	Command string `mapstructure:"command"`
+	Prefix  string `mapstructure:"prefix"`
+}
+
+type winCredBackendConfig struct {
+	Prefix string `mapstructure:"prefix"`
+}
+
+type fileBackendConfig struct {
+	Dir string `mapstructure:"dir"`
+}
+
 func (c *Cfg) FileCheck(enable bool) {
 	if _, err := os.OpenFile(c.Files.SelfPath, os.O_RDONLY|os.O_CREATE, 0600); err != nil {
 		log.Fatal("could not create vault-context config file")
