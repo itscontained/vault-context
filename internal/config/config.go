@@ -23,10 +23,10 @@ type Files struct {
 	Home      string
 }
 type VaultEnv struct {
-	URL       string `mapstructure:"url"`
-	Namespace string `mapstructure:"namespace"`
-	Alias     string `mapstructure:"alias"`
-	Token     storage.Token
+	URL       string        `mapstructure:"url"`
+	Namespace string        `mapstructure:"namespace"`
+	Alias     string        `mapstructure:"alias"`
+	Token     storage.Token `mapstructure:"-"`
 }
 
 var Config = Cfg{
