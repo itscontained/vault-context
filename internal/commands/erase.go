@@ -1,17 +1,22 @@
 package commands
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-
-	"github.com/itscontained/vault-context/internal/config"
 )
 
 // eraseCmd represents the erase command
 var eraseCmd = &cobra.Command{
 	Use:    "erase",
 	Hidden: true,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		err = cfg.Keyring.InitKeyring()
+		if err != nil {
+			log.Fatal(err)
+		}
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		config.Config.TokenHelper("erase")
+		cfg.TokenHelper("erase")
 	},
 }
 

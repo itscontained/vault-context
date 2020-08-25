@@ -6,7 +6,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/itscontained/vault-context/internal/config"
 	"github.com/itscontained/vault-context/internal/utility"
 )
 
@@ -38,14 +37,17 @@ var addCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		namespace, _ := cmd.Flags().GetString("namespace")
-		if err := config.Config.Add(url, namespace, alias); err != nil {
+		if err := cfg.Add(url, namespace, alias); err != nil {
 			log.Error(err)
 		} else {
 			log.Info("context added")
 		}
 	},
 	PostRun: func(cmd *cobra.Command, args []string) {
-		config.Write()
+		err := cfg.Write()
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 

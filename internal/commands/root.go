@@ -7,12 +7,17 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/itscontained/vault-context/internal/config"
-
 	"github.com/spf13/viper"
+
+	"github.com/itscontained/vault-context/internal/config"
+	"github.com/itscontained/vault-context/internal/logging"
 )
 
-var debug = false
+var (
+	debug = false
+	cfg   *config.Config
+	err   error
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -36,20 +41,22 @@ func init() {
 	cobra.OnInitialize(initConfig)
 }
 
-// initConfig reads in config file and ENV variables if set.
+// initConfig reads in config file and ENV variables if set. It also initializes config.New() and logging.New(debug)
+// at start
 func initConfig() {
-	config.Config.Init(debug)
-	viper.AddConfigPath(config.Config.Files.SelfDir)
-	viper.SetConfigName(config.Config.Files.Self)
+	cfg = config.New()
+	logging.New(debug)
+	viper.AddConfigPath(cfg.Files.SelfDir)
+	viper.SetConfigName(cfg.Files.Self)
 	viper.SetConfigType("yaml")
 
 	viper.AutomaticEnv() // read in environment variables that match
 
-	config.Config.FileCheck(false)
+	cfg.FileCheck(false)
 
 	if err := viper.ReadInConfig(); err == nil {
 		log.Debug("using config file:", viper.ConfigFileUsed())
-		if err := viper.Unmarshal(&config.Config); err != nil {
+		if err := viper.Unmarshal(&cfg); err != nil {
 			log.Fatal("could not read config file")
 		}
 	} else {

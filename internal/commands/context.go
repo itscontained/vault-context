@@ -37,7 +37,7 @@ func shell(ctx string) {
 	shell := os.Getenv("SHELL")
 	env := syscall.Environ()
 	var v config.VaultEnv
-	for _, vaultEnv := range config.Config.VaultEnvs {
+	for _, vaultEnv := range cfg.VaultEnvs {
 		if vaultEnv.Alias == ctx || vaultEnv.URL == ctx {
 			v = vaultEnv
 			break

@@ -5,8 +5,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-
-	"github.com/itscontained/vault-context/internal/config"
 )
 
 // urlCmd represents the url command
@@ -46,7 +44,7 @@ var aliasCmd = &cobra.Command{
 		inContext := os.Getenv("VAULT_CONTEXT")
 		url := os.Getenv("VAULT_ADDR")
 		if inContext != "" {
-			for _, v := range config.Config.VaultEnvs {
+			for _, v := range cfg.VaultEnvs {
 				if url == v.URL {
 					fmt.Println(v.Alias)
 					return

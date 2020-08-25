@@ -11,7 +11,7 @@ import (
 	"github.com/itscontained/vault-context/internal/storage"
 )
 
-func (c *Cfg) TokenHelper(cmd string) {
+func (c *Config) TokenHelper(cmd string) {
 	url := os.Getenv("VAULT_ADDR")
 	if url == "" {
 		log.Error("not in a vault context")
@@ -21,7 +21,7 @@ func (c *Cfg) TokenHelper(cmd string) {
 		if context.URL == url {
 			switch cmd {
 			case "get":
-				if t, err := c.Storage.Get(url); err == nil {
+				if t, err := c.Keyring.Get(url); err == nil {
 					fmt.Print(t.Token)
 					return
 				}
@@ -32,14 +32,14 @@ func (c *Cfg) TokenHelper(cmd string) {
 						VaultAddr: url,
 						Token:     strings.TrimSuffix(string(stdin), "\n"),
 					}
-					if err := Config.Storage.Store(token); err != nil {
+					if err := c.Keyring.Store(token); err != nil {
 						log.Error(err)
 					}
 				} else {
 					log.Error("could not read input")
 				}
 			case "erase":
-				if err := Config.Storage.Erase(url); err != nil {
+				if err := c.Keyring.Erase(url); err != nil {
 					log.Error(err)
 				}
 			}

@@ -3,53 +3,11 @@ package config
 import (
 	"fmt"
 	"os"
-	"os/user"
-	"path/filepath"
 
-	"github.com/99designs/keyring"
 	log "github.com/sirupsen/logrus"
-
-	"github.com/itscontained/vault-context/internal/storage"
 )
 
-type Keychain struct {
-	BackendType   string                     `mapstructure:"backend"`
-	Keychain      keychainBackendConfig      `mapstructure:"keychain"`
-	KDEWallet     kdeWalletBackendConfig     `mapstructure:"kdewallet"`
-	SecretService secretServiceBackendConfig `mapstructure:"secret-service"`
-	Pass          passBackendConfig          `mapstructure:"pass"`
-	WinCred       winCredBackendConfig       `mapstructure:"wincred"`
-	File          fileBackendConfig          `mapstructure:"file"`
-}
-
-type keychainBackendConfig struct {
-	Keychain       string `mapstructure:"keychain_name"`
-	Synchronizable bool   `mapstructure:"icloud"`
-}
-
-type kdeWalletBackendConfig struct {
-	Keychain string `mapstructure:"keychain_name"`
-}
-
-type secretServiceBackendConfig struct {
-	Collection string `mapstructure:"collection"`
-}
-
-type passBackendConfig struct {
-	Dir     string `mapstructure:"dir"`
-	Command string `mapstructure:"command"`
-	Prefix  string `mapstructure:"prefix"`
-}
-
-type winCredBackendConfig struct {
-	Prefix string `mapstructure:"prefix"`
-}
-
-type fileBackendConfig struct {
-	Dir string `mapstructure:"dir"`
-}
-
-func (c *Cfg) FileCheck(enable bool) {
+func (c *Config) FileCheck(enable bool) {
 	if _, err := os.OpenFile(c.Files.SelfPath, os.O_RDONLY|os.O_CREATE, 0600); err != nil {
 		log.Fatal("could not create vault-context config file")
 	}
@@ -77,62 +35,5 @@ func (c *Cfg) FileCheck(enable bool) {
 		}
 	} else {
 		log.Fatal("could not create vault config file")
-	}
-}
-
-func (c *Cfg) Init(debug bool) {
-	var err error
-	logFormatter := &log.TextFormatter{
-		DisableTimestamp:       true,
-		FullTimestamp:          true,
-		DisableLevelTruncation: true,
-	}
-	if debug {
-		log.SetLevel(log.DebugLevel)
-		logFormatter.DisableTimestamp = false
-	}
-	log.SetFormatter(logFormatter)
-	f := &Files{
-		Self:  "vault-context",
-		Vault: ".vault",
-	}
-	if cUser, err := user.Current(); err != nil {
-		log.Fatal(err)
-	} else {
-		f.Home = cUser.HomeDir
-		f.SelfDir = filepath.Join(f.Home, ".config")
-		f.SelfPath = filepath.Join(f.SelfDir, f.Self)
-		f.VaultPath = filepath.Join(f.Home, f.Vault)
-	}
-	c.Files = *f
-
-	storageCfg := keyring.Config{
-		ServiceName: "vault-context",
-
-		// keychain (macos)
-		KeychainTrustApplication: true,
-		KeychainSynchronizable:   Config.Keychain.Keychain.Synchronizable,
-	}
-	switch Config.Keychain.BackendType {
-	case "automatic", "":
-		storageCfg.AllowedBackends = storage.Backends
-	case "keychain":
-		storageCfg.AllowedBackends = []keyring.BackendType{keyring.KeychainBackend}
-	case "kdewallet":
-		storageCfg.AllowedBackends = []keyring.BackendType{keyring.KWalletBackend}
-	case "secret-service":
-		storageCfg.AllowedBackends = []keyring.BackendType{keyring.SecretServiceBackend}
-	case "wincred":
-		storageCfg.AllowedBackends = []keyring.BackendType{keyring.WinCredBackend}
-	case "keepass":
-		storageCfg.AllowedBackends = []keyring.BackendType{keyring.PassBackend}
-	case "file":
-		storageCfg.AllowedBackends = []keyring.BackendType{keyring.FileBackend}
-	default:
-		log.Errorf("Unknown backend '%s'", Config.Keychain.BackendType)
-	}
-
-	if c.Storage, err = storage.New(storageCfg); err != nil {
-		log.Fatalf("Unable to initialize backend '%s'", Config.Keychain.BackendType)
 	}
 }

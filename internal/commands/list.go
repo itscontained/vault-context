@@ -7,9 +7,8 @@ import (
 
 	vault "github.com/hashicorp/vault/api"
 	"github.com/jedib0t/go-pretty/table"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-
-	"github.com/itscontained/vault-context/internal/config"
 )
 
 var wide = false
@@ -19,6 +18,12 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List configured contexts",
 	Long:  `Show a table of configured vault contexts`,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		err = cfg.Keyring.InitKeyring()
+		if err != nil {
+			log.Fatal(err)
+		}
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		list("table")
 	},
@@ -42,9 +47,9 @@ func list(format string) (ctxList []string) {
 		} else {
 			headers := table.Row{"Alias", "URL", "Namespace", "Token"}
 			t.AppendHeader(headers)
-			for _, v := range config.Config.VaultEnvs {
+			for _, v := range cfg.VaultEnvs {
 				var row table.Row
-				if token, err := config.Config.Storage.Get(v.URL); err != nil {
+				if token, err := cfg.Keyring.Get(v.URL); err != nil {
 					row = table.Row{v.Alias, v.URL, v.Namespace, "-"}
 				} else {
 					row = table.Row{v.Alias, v.URL, v.Namespace, token.Token}
@@ -55,7 +60,7 @@ func list(format string) (ctxList []string) {
 		t.Render()
 		return nil
 	case "search":
-		for _, context := range config.Config.VaultEnvs {
+		for _, context := range cfg.VaultEnvs {
 			if context.Alias != "" {
 				ctxList = append(ctxList, context.Alias)
 			} else {
@@ -70,9 +75,9 @@ func list(format string) (ctxList []string) {
 func wideList(t table.Writer) {
 	headers := table.Row{"Alias", "URL", "Namespace", "Token", "Username", "TTL", "Renewable", "Policies"}
 	t.AppendHeader(headers)
-	for _, v := range config.Config.VaultEnvs {
+	for _, v := range cfg.VaultEnvs {
 		row := table.Row{v.Alias, v.URL, v.Namespace}
-		token, err := config.Config.Storage.Get(v.URL)
+		token, err := cfg.Keyring.Get(v.URL)
 		if err != nil {
 			row = append(row, "-")
 			t.AppendRow(row)

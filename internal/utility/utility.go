@@ -1,7 +1,6 @@
 package utility
 
 import (
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -11,7 +10,6 @@ import (
 
 func IsUrl(str string) bool {
 	u, err := url.Parse(str)
-	fmt.Println(u)
 	return err == nil && u.Scheme != "" && u.Host != ""
 }
 

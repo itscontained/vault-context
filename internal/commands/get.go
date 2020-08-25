@@ -1,17 +1,22 @@
 package commands
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-
-	"github.com/itscontained/vault-context/internal/config"
 )
 
 // getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:    "get",
 	Hidden: true,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		err = cfg.Keyring.InitKeyring()
+		if err != nil {
+			log.Fatal(err)
+		}
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		config.Config.TokenHelper("get")
+		cfg.TokenHelper("get")
 	},
 }
 

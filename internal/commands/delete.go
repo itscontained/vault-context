@@ -1,9 +1,8 @@
 package commands
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-
-	"github.com/itscontained/vault-context/internal/config"
 )
 
 // deleteCmd represents the delete command
@@ -12,11 +11,20 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete a saved context",
 	Long:  `Delete a saved context from local storage`,
 	Args:  cobra.ExactArgs(1),
+	PreRun: func(cmd *cobra.Command, args []string) {
+		err = cfg.Keyring.InitKeyring()
+		if err != nil {
+			log.Fatal(err)
+		}
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		config.Config.Delete(args[0])
+		cfg.Delete(args[0])
 	},
 	PostRun: func(cmd *cobra.Command, args []string) {
-		config.Write()
+		err := cfg.Write()
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
